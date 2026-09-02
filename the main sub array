@@ -1,0 +1,91 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static List<Integer> maxSubarray(List<Integer> arr) {
+
+        // Maximum subarray sum
+        int currentSum = arr.get(0);
+        int maxSubarray = arr.get(0);
+
+        // Maximum subsequence sum
+        int maxSubsequence = 0;
+        int largestElement = arr.get(0);
+        boolean hasPositive = false;
+
+        for (int i = 0; i < arr.size(); i++) {
+
+            int value = arr.get(i);
+
+            // Kadane's Algorithm
+            if (i > 0) {
+                currentSum = Math.max(value, currentSum + value);
+                maxSubarray = Math.max(maxSubarray, currentSum);
+            }
+
+            // Find largest element
+            if (value > largestElement) {
+                largestElement = value;
+            }
+
+            // Add positive values for subsequence
+            if (value > 0) {
+                maxSubsequence += value;
+                hasPositive = true;
+            }
+        }
+
+        // If all values are negative,
+        // choose the largest (least negative) value
+        if (!hasPositive) {
+            maxSubsequence = largestElement;
+        }
+
+        List<Integer> result = new ArrayList<Integer>();
+        result.add(maxSubarray);
+        result.add(maxSubsequence);
+
+        return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader bufferedReader =
+            new BufferedReader(new InputStreamReader(System.in));
+
+        BufferedWriter bufferedWriter =
+            new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int t = Integer.parseInt(bufferedReader.readLine().trim());
+
+        for (int tItr = 0; tItr < t; tItr++) {
+
+            int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+            String[] arrItems = bufferedReader.readLine().split(" ");
+
+            List<Integer> arr = new ArrayList<Integer>();
+
+            for (int i = 0; i < n; i++) {
+                arr.add(Integer.parseInt(arrItems[i]));
+            }
+
+            List<Integer> result = maxSubarray(arr);
+
+            for (int i = 0; i < result.size(); i++) {
+
+                bufferedWriter.write(String.valueOf(result.get(i)));
+
+                if (i != result.size() - 1) {
+                    bufferedWriter.write(" ");
+                }
+            }
+
+            bufferedWriter.newLine();
+        }
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
